@@ -13,9 +13,7 @@ const isInvalid = (id) => {
 	const partA = id.substring(0, l)
 	const partB = id.substring(l)
 	// if they match, this id is invalid
-	if (partA == partB) {
-		sumOfInvalidIds += parseInt(id)
-	}
+	return partA == partB
 }
 
 const isInvalid2 = (id) => {
