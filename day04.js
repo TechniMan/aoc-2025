@@ -85,7 +85,7 @@ let sum = 0
 do {
 	accessible = accessibleRolls()
 	sum += accessible.length
-	console.log(`Accessible rolls: ${accessible.length}`)
+	//console.log(`Accessible rolls: ${accessible.length}`)
 	removeAccessibleRolls(accessible)
 } while (accessible.length > 0)
 console.log(`Sum of accessible rolls: ${sum}`)
