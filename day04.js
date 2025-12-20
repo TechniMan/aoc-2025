@@ -50,25 +50,42 @@ function adjacentRollsAt(x, y) {
 	return count
 }
 
-let part1 = 0
-for (let y = 0; y < colLength; ++y) {
-let logLine = ''
-for (let x = 0; x < rowLength; ++x) {
-	// skip empty spaces
-	if (grid[y][x] === '.') {
-		logLine += '.'
-		continue
-	}
+function accessibleRolls() {
+	const accessibleCoords = []
+	for (let y = 0; y < colLength; ++y) {
+		let logLine = ''
+		for (let x = 0; x < rowLength; ++x) {
+			// skip empty spaces
+			if (grid[y][x] === '.') {
+				logLine += '.'
+				continue
+			}
 
-	const adjacentRolls = adjacentRollsAt(x, y)
-	if (adjacentRolls < 4) {
-		logLine += 'x'
-		part1++
-	} else {
-		logLine += '@'
+			const adjacentRolls = adjacentRollsAt(x, y)
+			if (adjacentRolls < 4) {
+				logLine += 'x'
+				accessibleCoords.push({ y, x })
+			} else {
+				logLine += '@'
+			}
+		}
+		//console.log(logLine)
+	}
+	return accessibleCoords
+}
+
+function removeAccessibleRolls(accessibleRollCoords) {
+	for (let coords of accessibleRollCoords) {
+		grid[coords.y][coords.x] = '.'
 	}
 }
-//console.log(logLine)
-}
 
-console.log(`Part 1: ${part1}`)
+let accessible = undefined
+let sum = 0
+do {
+	accessible = accessibleRolls()
+	sum += accessible.length
+	console.log(`Accessible rolls: ${accessible.length}`)
+	removeAccessibleRolls(accessible)
+} while (accessible.length > 0)
+console.log(`Sum of accessible rolls: ${sum}`)
