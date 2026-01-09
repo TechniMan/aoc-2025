@@ -31,7 +31,7 @@ for (const line of inputLines) {
 
 const boxCount = boxes.length
 // calculate distances for all boxes
-const distances = []
+let distances = []
 for (let aIdx = 0; aIdx < boxCount - 1; ++aIdx) {
 	// find distance to each box after this one, to avoid duplicate distances
 	// since a-to-b and b-to-a are the same
@@ -47,10 +47,11 @@ for (let aIdx = 0; aIdx < boxCount - 1; ++aIdx) {
 // link up the closest 10/1000 distances
 // first, sort by distance ascending
 distances.sort((a, b) => a.distance - b.distance)
-const links = 1000
-for (let dIdx = 0; dIdx < links; ++dIdx) {
+let lastDistance = null
+function linkClosestBoxes() {
 	// check if either are already in any circuits
-	const distance = distances[dIdx]
+	const distance = distances[0]
+	lastDistance = distance
 	const aCircuitIdx = circuits.findIndex(c => c.indices.includes(distance.aIdx))
 	const bCircuitIdx = circuits.findIndex(c => c.indices.includes(distance.bIdx))
 	// if neither are in a circuit already, start a new one
@@ -92,8 +93,22 @@ for (let dIdx = 0; dIdx < links; ++dIdx) {
 	}
 }
 
+const links = 1000
+for (let d = 0; d < links; ++d) {
+	linkClosestBoxes()
+	distances = distances.slice(1)
+}
+
 // sort circuits array so longest is first
 circuits.sort((a, b) => b.count - a.count)
 // multiply sizes of 3 largest circuits
 const answerPart1 = circuits[0].count * circuits[1].count * circuits[2].count
 console.log(answerPart1)
+
+while (circuits.length > 1 || circuits[0].count < boxes.length) {
+	linkClosestBoxes()
+	distances = distances.slice(1)
+}
+
+const answerPart2 = boxes[lastDistance.aIdx].x * boxes[lastDistance.bIdx].x
+console.log(answerPart2)
